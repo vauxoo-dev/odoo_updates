@@ -5,7 +5,7 @@ import click
 from utils import PostgresConnector, copy_list_dicts
 
 
-def menu_tree(menu_id, database):
+def menu_tree(menu_id, config):
     sql = """
     WITH RECURSIVE search_menu(id, parent_id, name, depth, hierarchypath) AS (
     SELECT menu.id, menu.parent_id, menu.name, 1, ppmenu.name || '->' || menu.name as hierarchypath
@@ -21,19 +21,19 @@ def menu_tree(menu_id, database):
     )
     SELECT * FROM search_menu WHERE id = %s ORDER BY depth DESC LIMIT 1;
     """
-    with PostgresConnector({'dbname': database}) as conn:
+    with PostgresConnector(config) as conn:
         tree = conn.execute_select(sql, (menu_id,))
         res = copy_list_dicts(tree)
     return res[0]
 
 
-def get_menus(database):
+def get_menus(config):
     sql = """SELECT ir_model_data.module || '.' || ir_model_data.name AS xml_id,
                     res_id, ir_ui_menu.name
                 FROM ir_model_data
                 JOIN ir_ui_menu ON res_id = ir_ui_menu.id
                 WHERE ir_model_data.model = 'ir.ui.menu';  """
-    with PostgresConnector({'dbname': database}) as conn:
+    with PostgresConnector(config) as conn:
         menus = conn.execute_select(sql)
         menus = copy_list_dicts(menus)
     res = dict()
@@ -44,7 +44,7 @@ def get_menus(database):
     return res
 
 
-def get_views(database):
+def get_views(config):
     """
     Select the views contents and xml_id from the specified database.
     The xml_id is formed by joining the module name and the id_model_data name so it
@@ -59,7 +59,7 @@ def get_views(database):
         JOIN ir_ui_view ON res_id = ir_ui_view.id
         WHERE ir_model_data.model = 'ir.ui.view'
         ORDER BY xml_id;"""
-    with PostgresConnector({'dbname': database}) as conn:
+    with PostgresConnector(config) as conn:
         cursor = conn.execute_select(sql)
         res = copy_list_dicts(cursor)
     return res
@@ -105,15 +105,15 @@ def get_views_diff(original_database, modified_database):
     :param modified_database: The name of the updated database
     :return:
     """
-    original_views = get_views(original_database)
-    modified_views = get_views(modified_database)
+    original_views = get_views({'dbname': original_database})
+    modified_views = get_views({'dbname': modified_database})
     res = compare_views(original_views, modified_views)
     return res
 
 
 def get_menus_diff(original_database, modified_database):
-    original_menus = get_menus(original_database)
-    modified_menus = get_menus(modified_database)
+    original_menus = get_menus({'dbname': original_database})
+    modified_menus = get_menus({'dbname': modified_database})
     res = {
         'updated': list(),
         'added': list(),
