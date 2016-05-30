@@ -11,6 +11,23 @@ env:
   - TOXENV=py27
   - TOXENV=py26
   - TOXENV=pypy
+  matrix:
+    - LINT_CHECK="1"
+    - TESTS="1"
+
+install:
+  - pip install --upgrade pip
+  - pip install .
+  - pip install -r test-requirements.txt
+  - wget https://raw.githubusercontent.com/Vauxoo/pylint-conf/master/conf/pylint_vauxoo_light.cfg
+  - sed --in-place '/^\s*#.*$/d' pylint_vauxoo_light.cfg
+
+script:
+  - if [ "${LINT_CHECK}" = "1" ]; then pylint odoo_updates --rcfile=pylint_vauxoo_light.cfg && tox -e lint; fi
+  - if [ "${TESTS}" = "1" ]; then coverage run setup.py test && tox -e doc && docker ps -a; fi
+
+after_success:
+  if [ "${TESTS}" = "1" ]; then coveralls; fi
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -U tox
