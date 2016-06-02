@@ -115,7 +115,6 @@ def compare_views(original_views, modified_views):
         'added': list()
     }
     for view_modified in modified_views:
-        print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<',  view_modified
         for index, view_original in enumerate(original_views):
             if view_original['xml_id'] == view_modified['xml_id'] and index not in pchecked:
                 if view_original['arch'] != view_modified['arch']:
