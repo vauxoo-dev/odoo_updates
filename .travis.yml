@@ -5,12 +5,6 @@ language: python
 python: 2.7
 
 env:
-  - TOXENV=py35
-  - TOXENV=py34
-  - TOXENV=py33
-  - TOXENV=py27
-  - TOXENV=py26
-  - TOXENV=pypy
   matrix:
     - LINT_CHECK="1"
     - TESTS="1"
