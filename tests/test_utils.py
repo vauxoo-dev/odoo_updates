@@ -59,8 +59,3 @@ class TestUtils(TestCase):
     def test_08_check_config_exception(self):
         res = self.connector.check_config()
         self.assertFalse(res)
-
-#    @mock.patch('botocore.client.SQS.send_message', side_effect=patched_send_message)
-#    def test_06_send_message(self):
-#        res = utils.send_message('asd', 'q_test_branchesv')
-#        print res
