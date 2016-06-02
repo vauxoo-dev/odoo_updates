@@ -21,7 +21,7 @@ install:
   - sed --in-place '/^\s*#.*$/d' pylint_vauxoo_light.cfg
 
 script:
-  - if [ "${LINT_CHECK}" = "1" ]; then pylint odoo_updates --rcfile=pylint_vauxoo_light.cfg && tox -e lint; fi
+  - if [ "${LINT_CHECK}" = "1" ]; then pylint odoo_updates --rcfile=pylint_vauxoo_light.cfg; fi
   - if [ "${TESTS}" = "1" ]; then coverage run setup.py test; fi
 
 after_success:
