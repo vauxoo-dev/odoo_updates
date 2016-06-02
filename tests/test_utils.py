@@ -2,10 +2,8 @@
 from unittest import TestCase
 from odoo_updates import utils
 import simplejson as json
-import testing.postgresql
 import psycopg2
 import os
-#import mock
 
 def patched_send_message(*args, **kwargs):
     return {
@@ -20,8 +18,7 @@ class TestUtils(TestCase):
     @classmethod
     def setUpClass(cls):
         os.environ['AWS_DEFAULT_REGION'] = "us-east-1"
-        cls.postgresql = testing.postgresql.Postgresql()
-        cls.connector = utils.PostgresConnector(cls.postgresql.dsn())
+        cls.connector = utils.PostgresConnector({'dbname': 'tests'})
 
     def test_01_jsonify(self):
         states = {'added': 1, 'deleted': 2, 'updated': 3}
@@ -41,7 +38,7 @@ class TestUtils(TestCase):
 
     def test_03_postgres_connector_exception(self):
         with self.assertRaises(psycopg2.OperationalError):
-            connector = utils.PostgresConnector()
+            utils.PostgresConnector({'dbname': 'wrong_name'})
 
     def test_04_execute_select(self):
         res = self.connector.execute_select('SELECT tablename FROM pg_catalog.pg_tables')
@@ -56,11 +53,6 @@ class TestUtils(TestCase):
     def test_05_execute_change(self):
         res = self.connector.execute_change('SELECT tablename FROM pg_catalog.pg_tables')
         self.assertTrue(res)
-
-    def test_06_disconnect(self):
-        self.connector.disconnect()
-        with self.assertRaises(psycopg2.InterfaceError):
-            self.connector.execute_select('SELECT tablename FROM pg_catalog.pg_tables')
 
     def test_06_check_config(self):
         res = self.connector.check_config()

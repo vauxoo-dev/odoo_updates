@@ -9,7 +9,7 @@ import shlex
 import spur
 
 
-def menu_tree(menu_id, config):
+def menu_tree(menu_id, database):
     sql = """
     WITH RECURSIVE search_menu(id, parent_id, name, depth, hierarchypath) AS (
     SELECT menu.id, menu.parent_id, menu.name, 1, ppmenu.name || '->' || menu.name as hierarchypath
@@ -25,19 +25,19 @@ def menu_tree(menu_id, config):
     )
     SELECT * FROM search_menu WHERE id = %s ORDER BY depth DESC LIMIT 1;
     """
-    with PostgresConnector(config) as conn:
+    with PostgresConnector({'dbname': database}) as conn:
         tree = conn.execute_select(sql, (menu_id,))
         res = copy_list_dicts(tree)
     return res[0]
 
 
-def get_menus(config):
+def get_menus(database):
     sql = """SELECT ir_model_data.module || '.' || ir_model_data.name AS xml_id,
                     res_id, ir_ui_menu.name
                 FROM ir_model_data
                 JOIN ir_ui_menu ON res_id = ir_ui_menu.id
                 WHERE ir_model_data.model = 'ir.ui.menu';  """
-    with PostgresConnector(config) as conn:
+    with PostgresConnector({'dbname': database}) as conn:
         menus = conn.execute_select(sql)
         menus = copy_list_dicts(menus)
     res = dict()
@@ -48,7 +48,7 @@ def get_menus(config):
     return res
 
 
-def get_views(config):
+def get_views(database):
     """
     Select the views contents and xml_id from the specified database.
     The xml_id is formed by joining the module name and the id_model_data name so it
@@ -63,7 +63,7 @@ def get_views(config):
         JOIN ir_ui_view ON res_id = ir_ui_view.id
         WHERE ir_model_data.model = 'ir.ui.view'
         ORDER BY xml_id;"""
-    with PostgresConnector(config) as conn:
+    with PostgresConnector({'dbname': database}) as conn:
         cursor = conn.execute_select(sql)
         res = copy_list_dicts(cursor)
     return res
@@ -72,8 +72,10 @@ def get_views(config):
 def get_branches():
     json_filename = '/tmp/branches.json'
     branches_file = os.path.expanduser('~/backupws/branches.py')
-    command = 'python {branches} -s -p instance/ -f {name}'.format(name=json_filename,
-                                                                   branches=branches_file)
+    instance_path = os.path.expanduser('~/instance')
+    command = 'python {branches} -s -p {instance} -f {name}'.format(name=json_filename,
+                                                                    branches=branches_file,
+                                                                    instance=instance_path)
     shell = spur.LocalShell()
     shell.run(shlex.split(command))
     with open(json_filename, "r") as dest:
@@ -179,8 +181,8 @@ def get_views_diff(original_database, modified_database):
     :param modified_database: The name of the updated database
     :return:
     """
-    original_views = get_views({'dbname': original_database})
-    modified_views = get_views({'dbname': modified_database})
+    original_views = get_views(original_database)
+    modified_views = get_views(modified_database)
     res = compare_views(original_views, modified_views)
     return res
 
@@ -200,8 +202,8 @@ def get_translations_diff(original_database, modified_database):
 
 
 def get_menus_diff(original_database, modified_database):
-    original_menus = get_menus({'dbname': original_database})
-    modified_menus = get_menus({'dbname': modified_database})
+    original_menus = get_menus(original_database)
+    modified_menus = get_menus(modified_database)
     res = {
         'updated': list(),
         'added': list(),
