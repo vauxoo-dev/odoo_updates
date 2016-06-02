@@ -1,5 +1,4 @@
 from unittest2 import TestCase
-import psycopg2
 from odoo_updates import odoo_updates
 import shlex
 import spur
@@ -18,9 +17,13 @@ class TestOdooUpdates(TestCase):
         cls.shell.run(shlex.split('createdb test_updated'))
         cls.shell.run(shlex.split('psql test_original -f original_test_db.sql'))
         cls.shell.run(shlex.split('psql test_updated -f updated_test_db.sql'))
-        cls.shell.run(shlex.split('git clone https://github.com/ruiztulio/backupws.git {home}/backupws'.format(home=cls.home)))
+        cmd = 'git clone https://github.com/ruiztulio/backupws.git {home}/backupws'\
+            .format(home=cls.home)
+        cls.shell.run(shlex.split(cmd))
         os.mkdir('{home}/instance'.format(home=cls.home))
-        cls.shell.run(shlex.split('git clone https://github.com/ruiztulio/backupws.git {home}/instance/repo'.format(home=cls.home)))
+        cmd = 'git clone https://github.com/ruiztulio/backupws.git {home}/instance/repo'\
+            .format(home=cls.home)
+        cls.shell.run(shlex.split(cmd))
 
     def test_01_menu_tree(self):
         res = odoo_updates.menu_tree(1, 'test_original')
@@ -151,16 +154,17 @@ class TestOdooUpdates(TestCase):
         odoo_updates.diff_to_screen(views, 'test_views')
         odoo_updates.diff_to_screen(translations, 'test_translations')
         odoo_updates.diff_to_screen(menus, 'test_menus')
-        #TODO how to test this functions?
+        # TODO how to test this functions?
 
     def test_12_branches_to_screen(self):
         branches = odoo_updates.get_branches()
         odoo_updates.branches_to_screen(branches)
-        #TODO how to test this function?
+        # TODO how to test this function?
 
     def test_99_cleanup(self):
         self.shell.run(shlex.split('dropdb test_original'))
         self.shell.run(shlex.split('dropdb test_updated'))
         self.shell.run(shlex.split('rm original_test_db.sql'))
         self.shell.run(shlex.split('rm updated_test_db.sql'))
-        self.shell.run(shlex.split('rm -rf {home}/instance {home}/backupws'.format(home=self.home)))
+        self.shell.run(shlex.split('rm -rf {home}/instance {home}/backupws'
+                                   .format(home=self.home)))

@@ -56,7 +56,8 @@ def branches(ctx):
 @cli.command()
 @click.pass_context
 def translations(ctx):
-    translation_states = odoo_updates.get_translations_diff(ctx.obj['original'], ctx.obj['updated'])
+    translation_states = odoo_updates.get_translations_diff(ctx.obj['original'],
+                                                            ctx.obj['updated'])
     if ctx.obj['screen']:
         odoo_updates.diff_to_screen(translation_states, 'Translations')
     else:
@@ -70,7 +71,8 @@ def getall(ctx):
     states = dict()
     views_states = odoo_updates.get_views_diff(ctx.obj['original'], ctx.obj['updated'])
     menus_states = odoo_updates.get_menus_diff(ctx.obj['original'], ctx.obj['updated'])
-    translation_states = odoo_updates.get_translations_diff(ctx.obj['original'], ctx.obj['updated'])
+    translation_states = odoo_updates.get_translations_diff(ctx.obj['original'],
+                                                            ctx.obj['updated'])
     branches_info = odoo_updates.get_branches()
     # One for each command views, models, menus, translations, etc
     states.update({'views': views_states})

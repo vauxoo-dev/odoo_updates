@@ -3,6 +3,7 @@ from unittest2 import TestCase
 from click.testing import CliRunner
 from odoo_updates import utils, odoo_updates
 
+
 class TestUpdatesv(TestCase):
 
     @classmethod

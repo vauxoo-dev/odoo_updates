@@ -5,13 +5,6 @@ import simplejson as json
 import psycopg2
 import os
 
-def patched_send_message(*args, **kwargs):
-    return {
-        'MD5OfMessageBody': 'string',
-        'MD5OfMessageAttributes': 'string',
-        'MessageId': 'string'
-    }
-
 
 class TestUtils(TestCase):
 
@@ -71,4 +64,3 @@ class TestUtils(TestCase):
 #    def test_06_send_message(self):
 #        res = utils.send_message('asd', 'q_test_branchesv')
 #        print res
-
