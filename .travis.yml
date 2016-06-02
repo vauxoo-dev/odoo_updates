@@ -22,7 +22,7 @@ install:
 
 script:
   - if [ "${LINT_CHECK}" = "1" ]; then pylint odoo_updates --rcfile=pylint_vauxoo_light.cfg && tox -e lint; fi
-  - if [ "${TESTS}" = "1" ]; then coverage run setup.py test && tox -e doc && docker ps -a; fi
+  - if [ "${TESTS}" = "1" ]; then coverage run setup.py test && tox -e doc; fi
 
 after_success:
   if [ "${TESTS}" = "1" ]; then coveralls; fi
