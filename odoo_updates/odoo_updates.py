@@ -3,7 +3,7 @@
 import difflib
 import click
 import os
-from utils import PostgresConnector, copy_list_dicts
+from .utils import PostgresConnector, copy_list_dicts
 import json
 import shlex
 import spur
