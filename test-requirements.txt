@@ -11,3 +11,4 @@ strict-rfc3339
 simplejson
 spur
 psycopg2
+configargparse
