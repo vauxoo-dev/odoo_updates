@@ -13,3 +13,4 @@ spur
 psycopg2
 configargparse
 gitpython
+docker-py
