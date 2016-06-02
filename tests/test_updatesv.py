@@ -1,5 +1,5 @@
 import click
-from unittest import TestCase
+from unittest2 import TestCase
 from click.testing import CliRunner
 from odoo_updates import utils, odoo_updates
 

@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest2 import TestCase
 import psycopg2
 from odoo_updates import odoo_updates
 import shlex

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from unittest import TestCase
+from unittest2 import TestCase
 from odoo_updates import utils
 import simplejson as json
 import psycopg2
