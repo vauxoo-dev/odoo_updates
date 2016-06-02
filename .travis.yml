@@ -13,6 +13,7 @@ install:
   - pip install --upgrade pip
   - pip install .
   - pip install -r test-requirements.txt
+  - pip install -r requirements.txt
   - wget https://raw.githubusercontent.com/Vauxoo/pylint-conf/master/conf/pylint_vauxoo_light.cfg
   - sed --in-place '/^\s*#.*$/d' pylint_vauxoo_light.cfg
 
