@@ -9,3 +9,6 @@ pytest
 coveralls
 strict-rfc3339
 simplejson
+spur
+shlex
+psycopg2
