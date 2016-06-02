@@ -8,3 +8,4 @@ tox
 pytest
 coveralls
 strict-rfc3339
+simplejson
