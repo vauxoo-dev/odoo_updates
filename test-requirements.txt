@@ -12,3 +12,4 @@ simplejson
 spur
 psycopg2
 configargparse
+gitpython
