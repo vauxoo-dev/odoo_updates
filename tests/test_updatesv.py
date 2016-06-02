@@ -35,3 +35,4 @@ class TestUpdatesv(TestCase):
                 utils.send_message(message, ctx.obj['queue'])
 
         res = self.runner.invoke(cli, ['origin', 'updated', '-s', 'queue', 'customer', 'views'])
+        print res
