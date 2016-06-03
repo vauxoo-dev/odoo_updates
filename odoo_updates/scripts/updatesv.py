@@ -82,9 +82,4 @@ def getall(ctx):
     message = utils.jsonify(states, 'getall', ctx.obj['customer'])
     utils.send_message(message, ctx.obj['queue'])
 
-def wholetthedogsout():
-    print 'asdasd'
-    a = 5 + 1
-    return a
-
 cli(obj={})
