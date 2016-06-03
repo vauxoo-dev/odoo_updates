@@ -1,7 +1,6 @@
 [report]
 include =
     */odoo_updates/*
-    */odoo_updates/scripts/updatesv.py
 
 omit =
     */.eggs/*

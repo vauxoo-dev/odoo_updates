@@ -152,7 +152,7 @@ class TestOdooUpdates(TestCase):
         translations = odoo_updates.get_translations_diff('test_original', 'test_updated')
         menus = odoo_updates.get_menus_diff('test_original', 'test_updated')
         odoo_updates.diff_to_screen(views, 'test_views')
-        odoo_updates.diff_to_screen(translations, 'test_translations')
+        odoo_updates.diff_to_screen(translations, 'Translations')
         odoo_updates.diff_to_screen(menus, 'test_menus')
         # TODO how to test this functions?
 
