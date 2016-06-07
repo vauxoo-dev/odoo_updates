@@ -14,3 +14,4 @@ psycopg2
 configargparse
 gitpython
 docker-py
+jsonschema
